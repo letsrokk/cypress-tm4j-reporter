@@ -1,7 +1,7 @@
 export interface Tm4jOptions {
-    baseUrl: string,
+    baseUrl?: string,
     authToken: string,
     projectKey: string,
-    defaultTestCaseFolderId: number,
+    defaultTestCaseFolderId?: number,
     debugOutput?: boolean
 }
