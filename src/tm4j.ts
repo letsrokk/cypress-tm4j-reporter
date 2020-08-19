@@ -1,89 +1,115 @@
+import axios from "axios";
+
+export class Tm4jApi {
+
+    private readonly baseUrl: string
+    private readonly authToken: string
+
+    constructor(baseUrl: string, authToken: string) {
+        this.baseUrl = baseUrl
+        this.authToken = authToken
+    }
+
+    public getTestCyclesByProjectKey(projectKey: String) {
+        return axios({
+            method: "GET",
+            url: `${this.baseUrl}/testcycles`,
+            headers: {
+                'Authorization': `Bearer ${this.authToken}`
+            },
+            params: {
+                'projectKey': projectKey
+            }
+        });
+    }
+
+    public createTestCycle(projectKey: String, name: String) {
+        return axios({
+            method: "POST",
+            url: `${this.baseUrl}/testcycles`,
+            headers: {
+                'Authorization': `Bearer ${this.authToken}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                'projectKey': projectKey,
+                'name': name
+            })
+        });
+    }
+
+    public getTestCasesByProjectKey(projectKey: String) {
+        return axios({
+            method: "GET",
+            url: `${this.baseUrl}/testcases`,
+            headers: {
+                'Authorization': `Bearer ${this.authToken}`
+            },
+            params: {
+                'projectKey': projectKey,
+                'maxResults': 50
+            }
+        });
+    }
+
+    public createTestCase(projectKey: String, name: String, folderId?: number) {
+        return axios({
+            method: "POST",
+            url: `${this.baseUrl}/testcases`,
+            headers: {
+                'Authorization': `Bearer ${this.authToken}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                'projectKey': projectKey,
+                'name': name,
+                'folderId': folderId
+            })
+        });
+    }
+
+    public publishTestExecution(testExecution: TestExecution) {
+        return axios({
+            method: "POST",
+            url: `${this.baseUrl}/testexecutions`,
+            headers: {
+                'Authorization': `Bearer ${this.authToken}`,
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(testExecution)
+        })
+    }
+}
+
 export class TestCycle {
 
-    private _key: String;
-    private _name: String;
-    private _executions: TestExecution[] = [];
+    key: string;
+    name: string;
 
-    constructor(key: String, title: String) {
-        this._key = key;
-        this._name = title;
+    constructor(key: string, title: string) {
+        this.key = key;
+        this.name = title;
     }
 
-    get key(): String {
-        return this._key;
-    }
-
-    set key(value: String) {
-        this._key = value;
-    }
-
-    get name(): String {
-        return this._name;
-    }
-
-    set name(value: String) {
-        this._name = value;
-    }
-
-    get executions(): TestExecution[] {
-        return this._executions;
-    }
-
-    public addExecution(value: TestExecution) {
-        this._executions.push(value);
-    }
 }
 
 export class TestCase {
 
-    private _key: String;
-    private _name: String;
+    key: string;
+    name: string;
 
-    get key(): String {
-        return this._key;
+    constructor(key: string, title: string) {
+        this.key = key;
+        this.name = title;
     }
 
-    set key(value: String) {
-        this._key = value;
-    }
-
-    get name(): String {
-        return this._name;
-    }
-
-    set name(value: String) {
-        this._name = value;
-    }
 }
 
 export class TestExecution {
 
-    private _key: String;
-    private _name: String;
-    private _status: String;
+    projectKey: string;
+    testCaseKey: string;
+    testCycleKey: string;
+    statusName: string;
 
-
-    get key(): String {
-        return this._key;
-    }
-
-    set key(value: String) {
-        this._key = value;
-    }
-
-    get name(): String {
-        return this._name;
-    }
-
-    set name(value: String) {
-        this._name = value;
-    }
-
-    get status(): String {
-        return this._status;
-    }
-
-    set status(value: String) {
-        this._status = value;
-    }
 }
