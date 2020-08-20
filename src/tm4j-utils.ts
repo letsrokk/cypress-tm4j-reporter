@@ -1,7 +1,10 @@
-import {TestCase, TestCycle, TestExecution, Tm4jApi} from "./tm4j";
-import axios, {AxiosPromise} from "axios";
-import {Tm4jOptions} from "./tm4joptions";
-import {TestRun} from "./testresults";
+import {TestCase, TestCycle, TestExecution, Tm4jApi} from "./tm4j-api";
+import {AxiosPromise} from "axios";
+import {TestRun} from "./test-results";
+import {CypressCliUtils} from "./cypress-cli-utils";
+import {Parsers} from "./parsers"
+
+import "cypress"
 
 export class Tm4jUtils {
 
@@ -13,15 +16,25 @@ export class Tm4jUtils {
         this.tm4j = new Tm4jApi(options.baseUrl, options.authToken)
     }
 
-    public async publishResults(testRun: TestRun) {
+    public async publishReporterResults(testRun: TestRun) {
         let testCycle = await this.prepareTestCycle(testRun)
         let testExecutions = await this.prepareTestExecutions(testRun)
         await this.publishExecutionResults(testExecutions)
         return testRun
     }
 
+    public async publishCypressCliResults(cypressRunResult: CypressCommandLine.CypressRunResult) {
+        let testRuns: TestRun[] = []
+        for (const testRun of CypressCliUtils.convertCypressRunResult(cypressRunResult)) {
+            testRuns.push(
+                await this.publishReporterResults(testRun).then(testRun => { return testRun })
+            )
+        }
+        return testRuns
+    }
+
     private async prepareTestCycle(testRun: TestRun) {
-        let { key, name } = this.titleToKeyAndName(testRun.name)
+        let { key, name } = Parsers.titleToKeyAndName(testRun.name)
         testRun.key = key
         testRun.name = name
 
@@ -43,7 +56,7 @@ export class Tm4jUtils {
 
     private async prepareTestExecutions(testRun: TestRun) {
         testRun.results.forEach(r => {
-            let {key, name} = this.titleToKeyAndName(r.name)
+            let {key, name} = Parsers.titleToKeyAndName(r.name)
             r.key = key
             r.name = name
         })
@@ -89,13 +102,12 @@ export class Tm4jUtils {
         }
     }
 
-    private titleToKeyAndName(title: string) {
-        let testCaseIdRegEx = /^([A-Z]+-[TR][0-9]+) (.*)/
-        let match = title.match(testCaseIdRegEx)
-        if (match != null && match.length === 3) {
-            return {key: match[1], name: match[2]}
-        } else {
-            return {key: undefined, name: title}
-        }
-    }
+}
+
+export interface Tm4jOptions {
+    baseUrl?: string,
+    authToken: string,
+    projectKey: string,
+    defaultTestCaseFolderId?: number,
+    debugOutput?: boolean
 }

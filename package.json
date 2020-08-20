@@ -9,11 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "mocha": "^8.1.1"
-  },
   "devDependencies": {
-    "@types/mocha": "2.2.36",
-    "axios": "^0.19.2"
+    "@types/node": "^14.0.27",
+    "axios": "^0.19.2",
+    "cypress": "^5.0.0"
   }
 }
