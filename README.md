@@ -40,7 +40,6 @@ cypress.run({
     let tm4jutils = new Tm4jUtils(results.config.reporterOptions)
     tm4jutils.publishCypressCliResults(results).then(testRuns => {
         console.log("TM4J results published")
-        // console.log(JSON.stringify(testRuns, null, 2))
         testRuns.forEach(run => {
             console.log(run)
         })
