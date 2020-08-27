@@ -16,6 +16,8 @@ export class CypressCliUtils {
     private static convertSpecsToTests(results: CypressCommandLine.CypressRunResult, testCycleName: string) {
         let testRun = new TestRun()
         testRun.name = testCycleName
+            ? testCycleName
+            : "Cypress Test Cycle"
         testRun.results = []
         results.runs.forEach(r => {
             let testResult = new TestResult()
