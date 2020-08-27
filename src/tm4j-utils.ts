@@ -25,7 +25,7 @@ export class Tm4jUtils {
 
     public async publishCypressCliResults(cypressRunResult: CypressCommandLine.CypressRunResult) {
         let testRuns: TestRun[] = []
-        for (const testRun of CypressCliUtils.convertCypressRunResult(cypressRunResult)) {
+        for (const testRun of CypressCliUtils.convertCypressRunResult(cypressRunResult, this.options)) {
             testRuns.push(
                 await this.publishReporterResults(testRun).then(testRun => { return testRun })
             )
@@ -81,7 +81,9 @@ export class Tm4jUtils {
             execution.projectKey = this.options.projectKey
             execution.testCycleKey = testRun.key
             execution.testCaseKey = r.key
-            execution.statusName = r.status === "passed" ? "Pass" : "Fail"
+            execution.statusName = r.status === "passed"
+                ? "Pass"
+                : "Fail"
             return execution
         })
     }
@@ -109,5 +111,7 @@ export interface Tm4jOptions {
     authToken: string,
     projectKey: string,
     defaultTestCaseFolderId?: number,
+    specMapping?: string,
+    cycleName?: string,
     debugOutput?: boolean
 }
