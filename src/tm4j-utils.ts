@@ -8,12 +8,27 @@ import "cypress"
 
 export class Tm4jUtils {
 
-    private tm4j: Tm4jApi
     private options: Tm4jOptions
+    private tm4j: Tm4jApi
+    private projectKey: string
+    private apiMaxResults: number
+    private isDebug: boolean
+
+
+    private cypressToTm4jStatusMap = new Map([
+        ["passed","Pass"],
+        ["failed","Fail"],
+        ["skipped","Not Executed"]
+    ])
 
     constructor(options: Tm4jOptions) {
-        this.options = options
         this.tm4j = new Tm4jApi(options.baseUrl, options.authToken)
+        this.options = options
+        this.projectKey = options.projectKey
+        this.isDebug = options.debugOutput
+        this.apiMaxResults = options.apiMaxResults
+            ? options.apiMaxResults
+            : 100
     }
 
     public async publishReporterResults(testRun: TestRun) {
@@ -62,16 +77,33 @@ export class Tm4jUtils {
         })
         if (testRun.results.find(r => !r.key)) {
             let testCases: TestCase[] =
-                await this.tm4j.getTestCasesByProjectKey(this.options.projectKey).then(response => response.data.values)
+                await this.tm4j.getTestCasesByProjectKey(this.options.projectKey, 0, this.apiMaxResults)
+                    .then(response => response.data.values)
+
             testRun.results.filter(r => !r.key).forEach(r => {
+                if (this.isDebug) {
+                    console.log(`Looking for test case key for: ${r.name}`)
+                }
                 let testCase = testCases.find(tc => tc.name === r.name)
                 if (testCase) {
                     r.key = testCase.key
                 }
+                if (this.isDebug) {
+                    if (r.key) {
+                        console.log(`Key found: ${r.key}`)
+                    } else {
+                        console.log('Key was not found')
+                    }
+                }
             })
         }
 
-        for (const result of testRun.results.filter(r => !r.key)) {
+        if (this.isDebug) {
+            console.log("Test Results:")
+            console.log(testRun)
+        }
+
+        for (let result of testRun.results.filter(r => !r.key)) {
             result.key = await this.tm4j.createTestCase(this.options.projectKey, result.name, this.options.defaultTestCaseFolderId)
                 .then(response => response.data.key)
         }
@@ -81,12 +113,25 @@ export class Tm4jUtils {
             execution.projectKey = this.options.projectKey
             execution.testCycleKey = testRun.key
             execution.testCaseKey = r.key
-            execution.statusName = r.status === "passed"
-                ? "Pass"
-                : "Fail"
+            execution.statusName = this.cypressToTm4jStatusMap.get(r.status)
             return execution
         })
     }
+
+    // private async getAllTestCasesByProjectKey() {
+    //     let testCases: TestCase[] = []
+    //     let startAt: number = 0;
+    //     let isLast: boolean = false
+    //     do {
+    //         await this.tm4j.getTestCasesByProjectKey(this.projectKey, startAt, this.apiMaxResults).then(response => {
+    //             testCases.push(response.data.values)
+    //             isLast = response.data.isLast
+    //         })
+    //         startAt += this.apiMaxResults
+    //     } while (isLast === false)
+    //
+    //     return testCases
+    // }
 
     private async publishExecutionResults(testExecutions: TestExecution[]) {
         let promises: AxiosPromise[] = []
@@ -113,5 +158,6 @@ export interface Tm4jOptions {
     defaultTestCaseFolderId?: number,
     specMapping?: string,
     cycleName?: string,
+    apiMaxResults?: number,
     debugOutput?: boolean
 }

@@ -38,7 +38,7 @@ export class Tm4jApi {
         });
     }
 
-    public getTestCasesByProjectKey(projectKey: String) {
+    public getTestCasesByProjectKey(projectKey: String, startAt: number = 0, maxResults: number = 50) {
         return axios({
             method: "GET",
             url: `${this.baseUrl}/testcases`,
@@ -47,7 +47,8 @@ export class Tm4jApi {
             },
             params: {
                 'projectKey': projectKey,
-                'maxResults': 50
+                'startAt': startAt,
+                'maxResults': maxResults
             }
         });
     }
