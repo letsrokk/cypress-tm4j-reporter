@@ -10,7 +10,7 @@ export class Tm4jApi {
         this.authToken = authToken
     }
 
-    public getTestCyclesByProjectKey(projectKey: String) {
+    public getTestCyclesByProjectKey(projectKey: String, startAt: number = 0, maxResults: number = 50) {
         return axios({
             method: "GET",
             url: `${this.baseUrl}/testcycles`,
@@ -18,7 +18,9 @@ export class Tm4jApi {
                 'Authorization': `Bearer ${this.authToken}`
             },
             params: {
-                'projectKey': projectKey
+                'projectKey': projectKey,
+                'startAt': startAt,
+                'maxResults': maxResults
             }
         });
     }
