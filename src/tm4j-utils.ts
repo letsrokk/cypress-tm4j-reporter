@@ -114,6 +114,9 @@ export class Tm4jUtils {
             execution.testCycleKey = testRun.key
             execution.testCaseKey = r.key
             execution.statusName = this.cypressToTm4jStatusMap.get(r.status)
+            execution.executionTime = r.duration
+            let actualEndDateInMillis = r.startedAt.getTime() + r.duration
+            execution.actualEndDate = new Date(actualEndDateInMillis).toISOString()
             return execution
         })
     }

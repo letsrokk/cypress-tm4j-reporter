@@ -40,10 +40,25 @@ export class CypressCliUtils {
                 let testResult = new TestResult()
                 testResult.name = tr.title[1]
                 testResult.status = tr.state
+                let {startedAt, duration} = this.extractStartedDateAndDuration(tr)
+                testResult.startedAt = startedAt
+                testResult.duration = duration
                 testRun.results.push(testResult)
             })
             testRuns.push(testRun)
         })
         return testRuns
+    }
+
+    private static extractStartedDateAndDuration(testResult: CypressCommandLine.TestResult) {
+        let startedAt = testResult.attempts[0].startedAt
+        let duration = 0;
+        testResult.attempts.forEach(a => {
+            duration += a.duration
+        })
+        return {
+            startedAt: new Date(startedAt),
+            duration: duration
+        }
     }
 }
