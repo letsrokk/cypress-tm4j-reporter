@@ -26,9 +26,8 @@ export class CypressCliUtils {
             testResult.status = r.stats.tests === r.stats.passes
                 ? "passed"
                 : "failed"
-            let {startedAt, duration} = this.extractStartedDateAndDurationForRunResult(r)
-            testResult.startedAt = startedAt
-            testResult.duration = duration
+
+            testResult.duration = this.extractDurationForRunResult(r)
             testResult.comment = this.extractErrorMessageForRunResult(r)
             testResult.environment = this.extractEnvironmentVariable(results, options)
             testRun.results.push(testResult)
@@ -36,13 +35,8 @@ export class CypressCliUtils {
         return [testRun]
     }
 
-    private static extractStartedDateAndDurationForRunResult(runResult: CypressCommandLine.RunResult) {
-        let startedAt = new Date(runResult.stats.startedAt)
-        let duration = runResult.stats.duration;
-        return {
-            startedAt: new Date(startedAt),
-            duration: duration
-        }
+    private static extractDurationForRunResult(runResult: CypressCommandLine.RunResult) {
+        return  runResult.stats.duration;
     }
 
     private static extractErrorMessageForRunResult(runResult: CypressCommandLine.RunResult) {
@@ -60,9 +54,7 @@ export class CypressCliUtils {
                 let testResult = new TestResult()
                 testResult.name = tr.title[1]
                 testResult.status = tr.state
-                let {startedAt, duration} = this.extractStartedDateAndDurationForTestResult(tr)
-                testResult.startedAt = startedAt
-                testResult.duration = duration
+                testResult.duration = this.extractDurationForTestResult(tr)
                 testResult.comment = this.extractErrorMessageForTestResult(tr)
                 testResult.environment = this.extractEnvironmentVariable(results, options)
                 testRun.results.push(testResult)
@@ -76,16 +68,12 @@ export class CypressCliUtils {
         return testResult.displayError
     }
 
-    private static extractStartedDateAndDurationForTestResult(testResult: CypressCommandLine.TestResult) {
-        let startedAt = testResult.attempts[0].startedAt
+    private static extractDurationForTestResult(testResult: CypressCommandLine.TestResult) {
         let duration = 0;
         testResult.attempts.forEach(a => {
             duration += a.duration
         })
-        return {
-            startedAt: new Date(startedAt),
-            duration: duration
-        }
+        return duration
     }
 
     private static extractEnvironmentVariable(results: CypressCommandLine.CypressRunResult, options: Tm4jOptions) {

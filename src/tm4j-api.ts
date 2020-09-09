@@ -118,7 +118,6 @@ export class TestExecution {
     testCaseKey: string;
     testCycleKey: string;
     statusName: string;
-    actualEndDate: string;
     executionTime: number;
     comment: string;
     environmentName: string;

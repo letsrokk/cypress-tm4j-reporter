@@ -19,9 +19,7 @@ function CypressTm4jReporter(runner, options) {
         let result = new TestResult()
         result.name = test.title
         result.status = test.state
-        let {startedAt, duration} = extractStartedAtAndDuration(test)
-        result.startedAt = startedAt
-        result.duration = duration
+        result.duration = extractDuration(test)
         result.comment = extractErrorMessage(test)
         testRun.results.push(result)
     })
@@ -35,18 +33,14 @@ function CypressTm4jReporter(runner, options) {
         }
     });
 
-    function extractStartedAtAndDuration(test) {
-        let startedAt = new Date(test.wallClockStartedAt)
+    function extractDuration(test) {
         let duration = test.duration
         if (test.prevAttempts && test.prevAttempts.length > 0) {
             test.prevAttempts.forEach(a => {
                 duration += a.duration
             })
         }
-        return {
-            startedAt: startedAt,
-            duration: duration
-        }
+        return duration
     }
 
     function extractErrorMessage(test) {
