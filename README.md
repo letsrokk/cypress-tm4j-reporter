@@ -10,19 +10,16 @@ $ npm install cypress-tm4j-reporter --save-dev
 
 ### Cypress Reporter Plugin
 
-Not recommended for use. See [Known Issues](#known-issues).
-
-`cypress.json` example:
+Not recommended for use. See [Known Issues](#known-issues).  
+Example: `cypress.json`
 ```json5
 {
   "projectId": "cypress-example",
   "reporter": "cypress-tm4j-reporter",
   "reporterOptions": {
     "baseUrl": "https://api.tm4j.smartbear.com/rest-api/v2",
-    "authToken": "[REDACTED]",
-    "projectKey": "JIRA",
-    "createTestCycles": true,
-    "createTestCases": true,
+    "authToken": "[READACTED]",
+    "projectKey": "AQA"
   }
 }
 ```
@@ -30,6 +27,7 @@ Not recommended for use. See [Known Issues](#known-issues).
 ### Cypress Module API
 
 Programmatic execution example:
+`cypress-cli.js`
 ```js
 const cypress = require('cypress')
 const {Tm4jUtils} = require('cypress-tm4j-reporter')
@@ -46,6 +44,26 @@ cypress.run({
     })
 })
 ```
+```shell script
+$ node cypress-cli.js
+```
+
+## Reporter Options
+
+Following reporter options are available:
+- `baseUrl` - base URL for API calls  
+Example: `https://api.tm4j.smartbear.com/rest-api/v2`  
+- `authToken` - Auth Token for TM4J for Cloud  
+- `projectyKey` - Jira project key for test cases and test cycles
+- `defaultTestCaseFolderId` - Folder ID for automatically created test cases
+- `createTestCases` - create new test case if existing test case key not found
+- `createTestCycles` - create new test cycle if existing test cycle key not found
+- `specMapping` - define how `*.spec.js` files mapped to TM4J entitiesv  
+Example: `execution`, `cycle`
+- `cycleName` - test cycle name for `specMapping=execution`
+- `environmentProperty` - populate `Environment` for execution with value from property with set name  
+Example: `environment` (`cypress run --env "environment=envcode"`)
+- `debugOutput` - debug output for reporter
 
 ## Known Issues
 
