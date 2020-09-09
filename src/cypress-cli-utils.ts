@@ -22,12 +22,24 @@ export class CypressCliUtils {
         results.runs.forEach(r => {
             let testResult = new TestResult()
             testResult.name = r.tests[0].title[0]
-            testResult.status = r.stats.failures > 0
-                ? "failed"
-                : "passed"
+            testResult.status = r.stats.tests === r.stats.passes
+                ? "passed"
+                : "failed"
+            let {startedAt, duration} = this.extractStartedDateAndDurationForRunResult(r)
+            testResult.startedAt = startedAt
+            testResult.duration = duration
             testRun.results.push(testResult)
         })
         return [testRun]
+    }
+
+    private static extractStartedDateAndDurationForRunResult(runResult: CypressCommandLine.RunResult) {
+        let startedAt = new Date(runResult.stats.startedAt)
+        let duration = runResult.stats.duration;
+        return {
+            startedAt: new Date(startedAt),
+            duration: duration
+        }
     }
 
     private static convertSpecsToTestCycles(results: CypressCommandLine.CypressRunResult) {
@@ -40,7 +52,7 @@ export class CypressCliUtils {
                 let testResult = new TestResult()
                 testResult.name = tr.title[1]
                 testResult.status = tr.state
-                let {startedAt, duration} = this.extractStartedDateAndDuration(tr)
+                let {startedAt, duration} = this.extractStartedDateAndDurationForTestResult(tr)
                 testResult.startedAt = startedAt
                 testResult.duration = duration
                 testRun.results.push(testResult)
@@ -50,7 +62,7 @@ export class CypressCliUtils {
         return testRuns
     }
 
-    private static extractStartedDateAndDuration(testResult: CypressCommandLine.TestResult) {
+    private static extractStartedDateAndDurationForTestResult(testResult: CypressCommandLine.TestResult) {
         let startedAt = testResult.attempts[0].startedAt
         let duration = 0;
         testResult.attempts.forEach(a => {
