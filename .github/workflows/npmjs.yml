@@ -18,7 +18,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Compile TypeScript
         id: compile_typescript
-        run: tsc
+        run: npm install && tsc
       - name: Deploy to Npmjs
         id: deploy_npmjs
         run: npm publish . --scope=@letsrokk --access public
