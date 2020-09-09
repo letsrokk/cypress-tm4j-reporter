@@ -11,5 +11,9 @@ export class TestResult {
     key: string
     name: string
     status: string
+    startedAt: Date
+    duration: number
+    comment: string
+    environment: string
 
 }

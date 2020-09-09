@@ -71,7 +71,7 @@ export class Tm4jApi {
         });
     }
 
-    public publishTestExecution(testExecution: TestExecution) {
+    public async publishTestExecution(testExecution: TestExecution) {
         return axios({
             method: "POST",
             url: `${this.baseUrl}/testexecutions`,
@@ -80,6 +80,10 @@ export class Tm4jApi {
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify(testExecution)
+        }).catch(e => {
+            let data = e.response.data
+            console.error("Error occurred while posting execution results:")
+            console.error(`${data.errorCode} ${data.status}: ${data.message}`)
         })
     }
 }
@@ -114,5 +118,9 @@ export class TestExecution {
     testCaseKey: string;
     testCycleKey: string;
     statusName: string;
+    actualEndDate: string;
+    executionTime: number;
+    comment: string;
+    environmentName: string;
 
 }
