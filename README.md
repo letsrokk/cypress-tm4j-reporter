@@ -48,6 +48,23 @@ cypress.run({
 $ node cypress-cli.js
 ```
 
+## Reporter Options
+
+Following reporter options are available:
+- `baseUrl` - base URL for API calls  
+Example: `https://api.tm4j.smartbear.com/rest-api/v2`  
+- `authToken` - Auth Token for TM4J for Cloud  
+- `projectyKey` - Jira project key for test cases and test cycles
+- `defaultTestCaseFolderId` - Folder ID for automatically created test cases
+- `createTestCases` - create new test case if existing test case key not found
+- `createTestCycles` - create new test cycle if existing test cycle key not found
+- `specMapping` - define how `*.spec.js` files mapped to TM4J entitiesv  
+Example: `execution`, `cycle`
+- `cycleName` - test cycle name for `specMapping=execution`
+- `environmentProperty` - populate `Environment` for execution with value from property with set name  
+Example: `environment` (`cypress run --env "environment=envcode"`)
+- `debugOutput` - debug output for reporter
+
 ## Known Issues
 
 - Issue with asynchronous reporters in Cypress:  
