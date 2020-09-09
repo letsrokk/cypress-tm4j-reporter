@@ -10,15 +10,13 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v1
-      - name: Get Version from Tag Name
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      - name: Set Version for Module
-        id: set_version
-        run: npm version "${{ steps.get_version.outputs.VERSION }}"
-      - name: Login to Npmjs
-        id: login_npmjs
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
+      - uses: actions/setup-node@v1
+        id: setup_node
+        with:
+          node-version: '10.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Deploy to Npmjs
         id: deploy_npmjs
         run: npm publish . --scope=@letsrokk
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
