@@ -46,7 +46,8 @@ export class CypressCliUtils {
     }
 
     private static extractErrorMessageForRunResult(runResult: CypressCommandLine.RunResult) {
-        return runResult.tests.find(t => t.displayError).displayError
+        let failure = runResult.tests.find(t => t.displayError)
+        return failure ? failure.displayError : undefined
     }
 
     private static convertSpecsToTestCycles(results: CypressCommandLine.CypressRunResult, options: Tm4jOptions) {
