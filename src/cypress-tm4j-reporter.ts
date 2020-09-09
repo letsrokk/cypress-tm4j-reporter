@@ -22,6 +22,7 @@ function CypressTm4jReporter(runner, options) {
         let {startedAt, duration} = extractStartedAtAndDuration(test)
         result.startedAt = startedAt
         result.duration = duration
+        result.comment = extractErrorMessage(test)
         testRun.results.push(result)
     })
 
@@ -45,6 +46,14 @@ function CypressTm4jReporter(runner, options) {
         return {
             startedAt: startedAt,
             duration: duration
+        }
+    }
+
+    function extractErrorMessage(test) {
+        if (test.err) {
+            return test.err.sourceMappedStack
+        } else {
+            return undefined
         }
     }
 
