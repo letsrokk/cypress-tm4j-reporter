@@ -10,11 +10,15 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Set up Node.js
         id: setup_node
+        uses: actions/setup-node@v1
         with:
           node-version: '10.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Compile TypeScript
+        id: compile_typescript
+        run: tsc
       - name: Deploy to Npmjs
         id: deploy_npmjs
         run: npm publish . --scope=@letsrokk --access public
