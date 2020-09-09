@@ -1,7 +1,12 @@
 {
   "name": "cypress-tm4j-reporter",
   "version": "0.0.1-aplha.4",
-  "description": "",
+  "homepage": "https://github.com/letsrokk/cypress-tm4j-reporter",
+  "description": "TM4J Cloud Reporter for Cypress.io",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/letsrokk/cypress-tm4j-reporter"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
