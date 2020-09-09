@@ -11,7 +11,7 @@ $ npm install cypress-tm4j-reporter --save-dev
 ### Cypress Reporter Plugin
 
 Not recommended for use. See [Known Issues](#known-issues).  
-`cypress.json` example:
+Example: `cypress.json`
 ```json5
 {
   "projectId": "cypress-example",
@@ -27,6 +27,7 @@ Not recommended for use. See [Known Issues](#known-issues).
 ### Cypress Module API
 
 Programmatic execution example:
+`cypress-cli.js`
 ```js
 const cypress = require('cypress')
 const {Tm4jUtils} = require('cypress-tm4j-reporter')
@@ -42,6 +43,9 @@ cypress.run({
         })
     })
 })
+```
+```shell script
+$ node cypress-cli.js
 ```
 
 ## Known Issues
