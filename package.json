@@ -1,11 +1,11 @@
 {
   "name": "cypress-tm4j-reporter",
-  "version": "0.0.1-aplha.4",
+  "version": "1.0.0",
   "homepage": "https://github.com/letsrokk/cypress-tm4j-reporter",
   "description": "TM4J Cloud Reporter for Cypress.io",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/letsrokk/cypress-tm4j-reporter"
+    "type": "git",
+    "url": "https://github.com/letsrokk/cypress-tm4j-reporter"
   },
   "main": "index.js",
   "scripts": {
