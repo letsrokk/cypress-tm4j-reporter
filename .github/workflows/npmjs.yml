@@ -17,6 +17,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Deploy to Npmjs
         id: deploy_npmjs
-        run: npm publish . --scope=@letsrokk
+        run: npm publish . --scope=@letsrokk --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
