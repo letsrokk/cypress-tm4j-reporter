@@ -6,15 +6,16 @@ export class CypressCliUtils {
     static convertCypressRunResult(results: CypressCommandLine.CypressRunResult, options: Tm4jOptions) {
         let testRuns: TestRun[]
         if (!options.specMapping || options.specMapping === "cycle") {
-            testRuns = this.convertSpecsToTestCycles(results)
+            testRuns = this.convertSpecsToTestCycles(results, options)
         } else {
-            testRuns = this.convertSpecsToTests(results, options.cycleName)
+            testRuns = this.convertSpecsToTests(results, options)
         }
         return testRuns
     }
 
-    private static convertSpecsToTests(results: CypressCommandLine.CypressRunResult, testCycleName: string) {
+    private static convertSpecsToTests(results: CypressCommandLine.CypressRunResult, options: Tm4jOptions) {
         let testRun = new TestRun()
+        let testCycleName = options.cycleName
         testRun.name = testCycleName
             ? testCycleName
             : "Cypress Test Cycle"
@@ -29,6 +30,7 @@ export class CypressCliUtils {
             testResult.startedAt = startedAt
             testResult.duration = duration
             testResult.comment = this.extractErrorMessageForRunResult(r)
+            testResult.environment = this.extractEnvironmentVariable(results, options)
             testRun.results.push(testResult)
         })
         return [testRun]
@@ -47,7 +49,7 @@ export class CypressCliUtils {
         return runResult.tests.find(t => t.displayError).displayError
     }
 
-    private static convertSpecsToTestCycles(results: CypressCommandLine.CypressRunResult) {
+    private static convertSpecsToTestCycles(results: CypressCommandLine.CypressRunResult, options: Tm4jOptions) {
         let testRuns: TestRun[] = []
         results.runs.forEach(r => {
             let testRun = new TestRun()
@@ -61,6 +63,7 @@ export class CypressCliUtils {
                 testResult.startedAt = startedAt
                 testResult.duration = duration
                 testResult.comment = this.extractErrorMessageForTestResult(tr)
+                testResult.environment = this.extractEnvironmentVariable(results, options)
                 testRun.results.push(testResult)
             })
             testRuns.push(testRun)
@@ -81,6 +84,15 @@ export class CypressCliUtils {
         return {
             startedAt: new Date(startedAt),
             duration: duration
+        }
+    }
+
+    private static extractEnvironmentVariable(results: CypressCommandLine.CypressRunResult, options: Tm4jOptions) {
+        let envVariable = options.environmentProperty
+        if (envVariable) {
+            return results.config.env[envVariable]
+        } else {
+            return undefined
         }
     }
 }

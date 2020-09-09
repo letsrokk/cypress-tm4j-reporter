@@ -118,6 +118,7 @@ export class Tm4jUtils {
             let actualEndDateInMillis = r.startedAt.getTime() + r.duration
             execution.actualEndDate = new Date(actualEndDateInMillis).toISOString()
             execution.comment = this.formatComment(r.comment)
+            execution.environmentName = r.environment
             return execution
         })
     }
@@ -146,18 +147,8 @@ export class Tm4jUtils {
     // }
 
     private async publishExecutionResults(testExecutions: TestExecution[]) {
-        let promises: AxiosPromise[] = []
         for (const e of testExecutions) {
-            promises.push(this.tm4j.publishTestExecution(e));
-        }
-        let errors = (await Promise.all(promises))
-            .filter(r => r.status != 201)
-        if (errors.length > 0) {
-            console.error("Error while posting Execution results:")
-            errors.forEach(e => {
-                console.log(e.config.data)
-                console.log(`${e.status} ${e.statusText}`)
-            })
+            await this.tm4j.publishTestExecution(e)
         }
     }
 
@@ -171,5 +162,6 @@ export interface Tm4jOptions {
     specMapping?: string,
     cycleName?: string,
     apiMaxResults?: number,
+    environmentProperty?: string
     debugOutput?: boolean
 }

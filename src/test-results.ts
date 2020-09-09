@@ -14,5 +14,6 @@ export class TestResult {
     startedAt: Date
     duration: number
     comment: string
+    environment: string
 
 }
