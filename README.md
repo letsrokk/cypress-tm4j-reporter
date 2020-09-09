@@ -10,8 +10,7 @@ $ npm install cypress-tm4j-reporter --save-dev
 
 ### Cypress Reporter Plugin
 
-Not recommended for use. See [Known Issues](#known-issues).
-
+Not recommended for use. See [Known Issues](#known-issues).  
 `cypress.json` example:
 ```json5
 {
@@ -19,10 +18,8 @@ Not recommended for use. See [Known Issues](#known-issues).
   "reporter": "cypress-tm4j-reporter",
   "reporterOptions": {
     "baseUrl": "https://api.tm4j.smartbear.com/rest-api/v2",
-    "authToken": "[REDACTED]",
-    "projectKey": "JIRA",
-    "createTestCycles": true,
-    "createTestCases": true,
+    "authToken": "[READACTED]",
+    "projectKey": "AQA"
   }
 }
 ```
