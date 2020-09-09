@@ -15,7 +15,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Set Version for Module
         id: set_version
-        run: npm version "${{ steps.get_version.outputs.VERSION }}"
+        run: npm version ${{ steps.get_version.outputs.VERSION }}
       - name: Login to Npmjs
         id: login_npmjs
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
