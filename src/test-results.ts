@@ -13,5 +13,6 @@ export class TestResult {
     status: string
     startedAt: Date
     duration: number
+    comment: string
 
 }

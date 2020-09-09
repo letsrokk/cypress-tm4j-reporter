@@ -116,5 +116,6 @@ export class TestExecution {
     statusName: string;
     actualEndDate: string;
     executionTime: number;
+    comment: string;
 
 }

@@ -28,6 +28,7 @@ export class CypressCliUtils {
             let {startedAt, duration} = this.extractStartedDateAndDurationForRunResult(r)
             testResult.startedAt = startedAt
             testResult.duration = duration
+            testResult.comment = this.extractErrorMessageForRunResult(r)
             testRun.results.push(testResult)
         })
         return [testRun]
@@ -40,6 +41,10 @@ export class CypressCliUtils {
             startedAt: new Date(startedAt),
             duration: duration
         }
+    }
+
+    private static extractErrorMessageForRunResult(runResult: CypressCommandLine.RunResult) {
+        return runResult.tests.find(t => t.displayError).displayError
     }
 
     private static convertSpecsToTestCycles(results: CypressCommandLine.CypressRunResult) {
@@ -55,11 +60,16 @@ export class CypressCliUtils {
                 let {startedAt, duration} = this.extractStartedDateAndDurationForTestResult(tr)
                 testResult.startedAt = startedAt
                 testResult.duration = duration
+                testResult.comment = this.extractErrorMessageForTestResult(tr)
                 testRun.results.push(testResult)
             })
             testRuns.push(testRun)
         })
         return testRuns
+    }
+
+    private static extractErrorMessageForTestResult(testResult: CypressCommandLine.TestResult) {
+        return testResult.displayError
     }
 
     private static extractStartedDateAndDurationForTestResult(testResult: CypressCommandLine.TestResult) {

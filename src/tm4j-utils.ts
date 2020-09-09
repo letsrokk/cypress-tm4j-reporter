@@ -117,8 +117,17 @@ export class Tm4jUtils {
             execution.executionTime = r.duration
             let actualEndDateInMillis = r.startedAt.getTime() + r.duration
             execution.actualEndDate = new Date(actualEndDateInMillis).toISOString()
+            execution.comment = this.formatComment(r.comment)
             return execution
         })
+    }
+
+    private formatComment(comment: string) {
+        if (comment) {
+            return comment.replace(/(?:\r\n|\r|\n)/g, '<br>')
+        } else {
+            return comment
+        }
     }
 
     // private async getAllTestCasesByProjectKey() {
