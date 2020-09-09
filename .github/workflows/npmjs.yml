@@ -1,8 +1,6 @@
 name: Build & Release on Npmjs.com
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - '*'
 jobs:
